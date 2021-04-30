@@ -1,0 +1,2 @@
+# Distrosaymail
+Distribution for saymail
