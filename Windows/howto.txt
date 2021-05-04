@@ -1,0 +1,106 @@
+*Nastavenie pre prvym spustenim
+Pred spustenim saymail.exe je potrebne:   
+1. editovat saymail.ini a upravit, doplnit, zmenit potrebne nastavenia (user, server,...)   
+  Upravuju sa hodnoty ZA prvou bodkociarkou napr.   
+    user; JohnDoe   
+  upravi sa IBA JohnDoe    
+  Riadky ini suboru zacinajuce znakom # su komentare a su ignorovane.
+  Subor ini musi byt v kodovani UTF-8.    
+  
+2. je potrebne si vybrat TTS(Text-To-Speech) engine, ktory bude citat texty (precita text a ulozi ho do zvukoveho suboru).   
+  Je to polozka tts v ini subore. Su na vyber dve moznosti:    
+  
+  A. (jednoduhsie na nastavenie)    
+    Ak sa zvoli    
+      tts;g                                        
+    pouzije sa na generovanie zvuku Google TTS.      
+    V tomto pripade je potrebne byt pripojeny do internetu - mat dostupnu url: https://translate.google.com (program to skontroluje).    
+    Je potrebne mat na pamati, ze v tomto pripade su udaje AdresaOdosielatela a Predmet posielane cez internet!     
+    
+  B. (zlozitejsie na nastavenie)   
+    Ak sa zvoli    
+      tts;b         
+    pouzije sa free utilitka balcon.exe z balika balabolka (http://www.cross-plus-a.com/balabolka.htm). 
+    Tento nastroj vytvara zvuky z textu pouzitim vstavaneho MSWin SAPI5 TextToSpeech.    
+    Je teda potrebne si doistalovat slovensky hlas - Filip (resp iny, ktorym chcete citat texty):    
+      - Doinstaluje sa to cez Nastavenie - Cas a Jazyk - Jazyk - pridat pozadovany jazky.
+      - Skontrolovat, ci je pre pozadovany jazyk nainstalovany aj hlas: Nastavenie - Cas a Jazyk - Rec     
+    Potom je este potrebne tento hlas spristupnit aj pre Balabolku:    
+      - to sa robi upravou registrov. Je potrebne spustit prislusny reg z archivu mobile.windows10.zip, 
+        napr. pre slovenky Filip spustit subory .reg  z adresara Slovak.    
+      - Ci je nainstalovany dany hlas mozno zistit spustenim balcon.exe -l  - program vypise dostupne hlasy.  
+
+
+*Spustenie      
+Po spusteni program nacita potrebne hodnoty z ini suboru. Ak niektora hodnota neexistuje, program caka na jej zadanie.  
+Potom skontroluje dostupnost gtts sluzby alebo pritomnost balcon.exe.   
+Potom je este POTREBNE zadat HESLO k userovi, ktory sa pripaja do mailu. (Koli bezpecnosti sa nezadava v ini subore.)  
+
+
+*Stopnutie programu
+Program sa stopne stlacanim CTRL-C.    
+
+
+*Zvukove subory
+Program uklada nacitane zvuky do adresara mails/. V podadresari mails/from/ su zvuky pre odosielatelov, v podadresari mails/subj/ su zvuky pre Predmet.    
+Doporucujeme adresar mails/subj/ vymazat, ak obsahuje viac ako 100 suborov. (Urobi sa automaticky po ukonceni programu, ak je nastavena polozka dellimitsubj > -1 v ini .)
+
+
+*Replacements:
+Akykolvek text v predmete a adrese odosielatela je mozne nahradit inym a program precita nahradeny text.     
+Na to sluzia polozky replace; v ini subore. Format je:     
+
+replace;regularny vyraz ktory sa ma nahradit;retazec ktory sa zapise a precita  
+
+napriklad
+  replace;^RE: ; Odpoved 
+  
+bude v kazdom predmete nahradeny retazec RE:medzera, ktory je na zaciatku riadku(^) retazcom medzeraOdpovedMedzera
+t.j. v polozkach replace sa beru do uvahy aj uvidn a zaverecne medzery!
+ 
+
+*Chyby a riesenie:
+- <class 'socket.gaierror'>, [Errno 11001] getaddrinfo failed
+  - nevie sa pripojit na IP/port. Skontrolujte siet, proxy, spravnost ip/DNS mena a portu
+  
+- ERROR: Bad language. Use balcon.exe -l and choose one.
+  - v ini subore je zle nastavena polozka language. Ak pouzivate balabolku, spustite balcon.exe -l a pouzite jeden z vypisanych hlasov.
+  
+- ERROR: Can't find ./balcon.exe. Copy it to current directory.
+  - nenasiel balcon.exe. Nakopirujte tento programik do adresara so saymail.exe. V adresari musi byt aj subor libsamplerate.dll .
+  
+- program prestane citat maily 
+  - nastava, ak sa v okne programu roluje text, pripadne klika na text. Vtedy by malo stacit stlacenie ENTER v okienku, kde program bezi.
+  
+- po stlaceni ctrl-c program neskonci
+  - stlacte ctrl-c niekolko krat po sebe
+
+  
+*Popis saymail.ini
+ ! je potrebne, aby bol subor v UTF-8 !
+#proxy server:port, e.g. 10.10.12.28:81
+proxy; 
+#mail owner username: domain\user or username or username@servername, e.g. poist\magdalenka
+user; 
+#server ip or dns, e.g.  webmail.poist.local
+server;  
+#mail service port, e.g. 993
+port; 
+#type of tts: b - balabolka OR g - google tts
+tts; b
+#language to use/or voice name: for google sk or cz or es or en or ru or ...), for balabolka Filip or Microsoft Filip  or ...
+language; Filip
+# how often to connect to mailbox: min 30 - max 600 seconds
+frequency;30
+# sound volume: min 0 - max 10
+volume;10
+# read also subject: 1 yes, 0 no
+saysubj; 1
+# delete saved sound files (delete, if count is reached, if -1: don't delete)
+dellimitsubj; -1
+# say, if empty subject
+emptysubj; Bez predmetu
+# say at start of message
+newmessage; Prišla nová správa od
+# replacements: regular expression;text to replace, see *Replacements
+replace;^FW: ;preposlaný email:
