@@ -38,7 +38,7 @@ Potom je este POTREBNE zadat HESLO k userovi, ktory sa pripaja do mailu. (Koli b
 
 
 *Stopnutie programu
-Program sa stopne stlacanim CTRL-C.    
+Konzolovy program sa stopne stlacanim CTRL-C.    
 
 
 *Zvukove subory
@@ -56,7 +56,7 @@ napriklad
   replace;^RE: ; Odpoved 
   
 bude v kazdom predmete nahradeny retazec RE:medzera, ktory je na zaciatku riadku(^) retazcom medzeraOdpovedMedzera
-t.j. v polozkach replace sa beru do uvahy aj uvidn a zaverecne medzery!
+t.j. v polozkach replace sa beru do uvahy aj uvodne a zaverecne medzery!
  
 
 *Chyby a riesenie:
